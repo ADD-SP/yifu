@@ -1,5 +1,7 @@
 # yifu
 
+[![CI](https://github.com/ADD-SP/yifu/actions/workflows/ci.yml/badge.svg)](https://github.com/ADD-SP/yifu/actions/workflows/ci.yml)
+
 寻找你在 GitHub 上的义父。
 
 你是否有这样的疑问？你的开源项目突然涨了很多 star，但是不是知道是地里长出来的还是被大佬点名了。

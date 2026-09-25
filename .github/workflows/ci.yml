@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: ruff
+        run: uv run --frozen ruff check src tests
+
+  test:
+    name: Test (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          enable-cache: true
+      - name: Install dependencies
+        run: uv sync --frozen --dev
+      - name: pytest
+        run: uv run --frozen pytest -q
+
+  graphql-schema:
+    name: Validate GraphQL queries against GitHub's schema
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Fetch the published schema
+        run: curl -fsSL -o "${RUNNER_TEMP}/schema.docs.graphql" https://docs.github.com/public/fpt/schema.docs.graphql
+      - name: Validate queries
+        env:
+          YIFU_GH_SCHEMA: ${{ runner.temp }}/schema.docs.graphql
+        run: uv run --frozen --with graphql-core pytest -q tests/test_graphql_schema.py
