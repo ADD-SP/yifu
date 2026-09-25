@@ -1,0 +1,30 @@
+[project]
+name = "yifu"
+version = "0.1.0"
+description = "CLI: infer which stargazers brought the most stars to a GitHub repository"
+readme = "README.md"
+authors = [
+    { name = "ADD-SP", email = "add_sp@outlook.com" }
+]
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+yifu = "yifu.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "pytest-httpserver>=1.1",
+]
+
+[build-system]
+requires = ["uv_build>=0.12.17,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
